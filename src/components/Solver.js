@@ -114,8 +114,8 @@ export default function Solver(props) {
         for (let y = 0; y < 3; y++) {
             for (let x = 0; x < 3; x++) {
                 let box = []
-                for (let i = y * 3; i < y + 3; i++) {
-                    for (let j = x * 3; j < x + 3; j++) {
+                for (let i = y * 3; i < (y * 3) + 3; i++) {
+                    for (let j = x * 3; j < (x * 3) + 3; j++) {
                         if (!newBoard[i][j].isRevealed) {
                             box.push([i, j, newBoard[i][j]])
                         }
