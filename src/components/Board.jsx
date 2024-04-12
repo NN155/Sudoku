@@ -30,7 +30,7 @@ export default function Board() {
                 return newBoard
             })
         }
-        else if (event.key == "Backspace"){
+        else if (event.key === "Backspace"){
             setBoardData(prevBoard => {
                 const cell = {
                     ...prevBoard[i][j],
@@ -57,7 +57,7 @@ export default function Board() {
     }
     
     function createCell(i, j) {
-        let cellStyle = boardData[i][j].isBlue ? { backgroundColor: "#53c5ec"} : {}
+        let cellStyle = {}
         if (i % 3 === 0) {
             cellStyle.borderTop ="1px solid black"
         }
@@ -71,9 +71,18 @@ export default function Board() {
             cellStyle.borderRight ="1px solid black"
         }
         return (
+            boardData[i][j].isBlue ? 
+            (
+            <div className="cell unselectable-text blue" style={cellStyle} onClick={() => revealCell(i, j)} onKeyDown={event => handleKeyPress(event, i, j)} tabIndex="0" key={`cell-${i}-${j}`}>
+                <p>{boardData[i][j].isRevealed && boardData[i][j].currentValue}</p>
+            </div>
+            )
+            :
+            (
             <div className="cell unselectable-text" style={cellStyle} onClick={() => revealCell(i, j)} onKeyDown={event => handleKeyPress(event, i, j)} tabIndex="0" key={`cell-${i}-${j}`}>
                 <p>{boardData[i][j].isRevealed && boardData[i][j].currentValue}</p>
             </div>
+            )
         )
     }
     function createBoard(size) {
