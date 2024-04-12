@@ -2,47 +2,12 @@ import React from "react"
 import Solver from "./Solver"
 import Restart from "./Restart"
 import GameMode from "./GameMode"
-
+import {values, reversValue, keysWithLetters, keysDefault} from "../data"
 export default function Board() {
-    const values = {
-        "0": 0,
-        "1": 1,
-        "2": 2,
-        "3": 3,
-        "4": 4,
-        "5": 5,
-        "6": 6,
-        "7": 7,
-        "8": 8,
-        "9": 9,
-        "10": 10,
-        "11": "A",
-        "12": "B",
-        "13": "C",
-        "14": "D",
-        "15": "F"
-    }
-    const reversValue = {
-        "0": 0,
-        "1": 1,
-        "2": 2,
-        "3": 3,
-        "4": 4,
-        "5": 5,
-        "6": 6,
-        "7": 7,
-        "8": 8,
-        "9": 9,
-        "10": 10,
-        "A": 11,
-        "B": 12,
-        "C": 13,
-        "D": 14,
-        "F": 15
-    }
+
     
     const [gameMode, setGameMode] = React.useState("Default")
-    const boardSize = gameMode === "Default" ? 9 : 15
+    const boardSize = gameMode === "Default" ? 9 : 12
     const [boardData, setBoardData] = React.useState(initializeBoard(boardSize))
     const boardStyle = {
         gridTemplateColumns: `repeat(${boardSize}, 30px)`
@@ -54,7 +19,7 @@ export default function Board() {
             data.push([])
           for (let j = 0; j < size; j++) {
             const cell = {isRevealed: false, currentValue: 0, checked: false, isBlue: false}
-            cell.value = mode === "Default" ? [1,2,3,4,5,6,7,8,9] : [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+            cell.value = mode === "Default" ? [1,2,3,4,5,6,7,8,9] : [1,2,3,4,5,6,7,8,9,10,"A","B","C","D","E","F"]
             data[i].push(cell)
           }
         }
@@ -62,29 +27,21 @@ export default function Board() {
     }
 
     function handleKeyPress(event, i ,j ) {
-        if (!isNaN(event.key)) {
+        const key = event.key.toUpperCase()
+        const data = gameMode === "Default" ? keysDefault : keysWithLetters
+        if (key in data) {
             setBoardData(prevBoard => {
                 const cell = {
                     ...prevBoard[i][j],
-                    isRevealed: Number(event.key) !== 0,
-                    currentValue: Number(event.key)}
+                    isRevealed: data[key] !== 0,
+                    currentValue: data[key]}
                 const newBoard = prevBoard.map(element => element)
                 newBoard[i][j] = cell
                 return newBoard
-            })
-        }
-        else if (event.key === "Backspace"){
-            setBoardData(prevBoard => {
-                const cell = {
-                    ...prevBoard[i][j],
-                    isRevealed: 0 !== 0,
-                    currentValue: 0 }
-                const newBoard = prevBoard.map(element => element)
-                newBoard[i][j] = cell
-                return newBoard
-            })
+                })
         }
     }
+
     function revealCell(i,j) {
         let value = boardData[i][j].currentValue
 
@@ -93,7 +50,7 @@ export default function Board() {
         }
         else if (gameMode === "With Letters") {
             value = reversValue[value]
-            value = (value + 1) % 16
+            value = (value + 1) % 17
             value = values[value]
         }
         setBoardData(prevBoard => {
@@ -110,34 +67,19 @@ export default function Board() {
     
     function createCell(i, j) {
         let cellStyle = {}
-        if (gameMode === "Default") {
-            if (i % 3 === 0) {
-                cellStyle.borderTop ="1px solid black"
-            }
-            else if ((i + 1) % 3 === 0 ) {
-                cellStyle.borderBottom ="1px solid black"
-            }
-            if (j % 3 === 0) {
-                cellStyle.borderLeft ="1px solid black"
-            }
-            else if ((j + 1) % 3 === 0) {
-                cellStyle.borderRight ="1px solid black"
-            }
+        if (i % (boardSize / 3) === 0) {
+            cellStyle.borderTop ="1px solid black"
         }
-        else if (gameMode === "With Letters") {
-            if (i % 5 === 0) {
-                cellStyle.borderTop ="1px solid black"
-            }
-            else if ((i + 1) % 5 === 0 ) {
-                cellStyle.borderBottom ="1px solid black"
-            }
-            if (j % 5 === 0) {
-                cellStyle.borderLeft ="1px solid black"
-            }
-            else if ((j + 1) % 5 === 0) {
-                cellStyle.borderRight ="1px solid black"
-            }
+        else if ((i + 1) % (boardSize / 3) === 0 ) {
+            cellStyle.borderBottom ="1px solid black"
         }
+        if (j % (boardSize / 3) === 0) {
+            cellStyle.borderLeft ="1px solid black"
+        }
+        else if ((j + 1) % (boardSize / 3) === 0) {
+            cellStyle.borderRight ="1px solid black"
+        }
+
         return (
             boardData[i][j].isBlue ? 
             (
