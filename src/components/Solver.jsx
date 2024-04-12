@@ -150,6 +150,7 @@ export default function Solver(props) {
     
     function solve() {
         newBoard = props.boardData.map(element => element)
+        console.log(newBoard)
         checkAllCells()
         checkAnotherCells()
         displayCells()
