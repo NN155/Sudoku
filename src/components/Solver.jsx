@@ -67,7 +67,6 @@ export default function Solver(props) {
                 result[i].push([cell[0], cell[1]]) // [i, j]
             }
         }
-        console.log(result)
         checkCells(result)
     }
     function checkCells(result) {
@@ -155,12 +154,11 @@ export default function Solver(props) {
         checkAnotherCells()
         displayCells()
         props.setBoardData(newBoard)
-        console.log(newBoard)
     }
 
     return (
         <div>
-            <button onClick={solve}>Solve</button>
+            <button className="btn btn-success" onClick={solve}>Solve</button>
         </div>
     )
 }

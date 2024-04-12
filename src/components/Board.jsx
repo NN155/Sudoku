@@ -1,5 +1,7 @@
 import React from "react"
 import Solver from "./Solver"
+import Restart from "./Restart"
+
 export default function Board() {
     const boardSize = 9;
     const [boardData, setBoardData] = React.useState(() => initializeBoard(boardSize))
@@ -106,6 +108,9 @@ export default function Board() {
         </div>
         <div className="center">
             <Solver boardData={boardData} setBoardData={setBoardData}/>
+        </div>
+        <div className="center">
+            <Restart setBoardData={setBoardData} initializeBoard={initializeBoard} size={boardSize}/>
         </div>
         </>
     )
