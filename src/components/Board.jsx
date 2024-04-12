@@ -4,9 +4,9 @@ import Restart from "./Restart"
 import GameMode from "./GameMode"
 
 export default function Board() {
-    const boardSize = 9;
-    const [boardData, setBoardData] = React.useState(() => initializeBoard(boardSize))
-    const [gameMode, setGameMode] = React.useState("Default")
+    const [gameMode, setGameMode] = React.useState("With Letters")
+    const [boardSize, setBoardSize] = React.useState(gameMode === "Default" ? 9 : 15)
+    const [boardData, setBoardData] = React.useState(initializeBoard(boardSize))
     const boardStyle = {
         gridTemplateColumns: `repeat(${boardSize}, 30px)`
     }
@@ -62,17 +62,33 @@ export default function Board() {
     
     function createCell(i, j) {
         let cellStyle = {}
-        if (i % 3 === 0) {
-            cellStyle.borderTop ="1px solid black"
+        if (gameMode === "Default") {
+            if (i % 3 === 0) {
+                cellStyle.borderTop ="1px solid black"
+            }
+            else if ((i + 1) % 3 === 0 ) {
+                cellStyle.borderBottom ="1px solid black"
+            }
+            if (j % 3 === 0) {
+                cellStyle.borderLeft ="1px solid black"
+            }
+            else if ((j + 1) % 3 === 0) {
+                cellStyle.borderRight ="1px solid black"
+            }
         }
-        else if ((i + 1) % 3 === 0 ) {
-            cellStyle.borderBottom ="1px solid black"
-        }
-        if (j % 3 === 0) {
-            cellStyle.borderLeft ="1px solid black"
-        }
-        else if ((j + 1) % 3 === 0) {
-            cellStyle.borderRight ="1px solid black"
+        else if (gameMode === "With Letters") {
+            if (i % 5 === 0) {
+                cellStyle.borderTop ="1px solid black"
+            }
+            else if ((i + 1) % 5 === 0 ) {
+                cellStyle.borderBottom ="1px solid black"
+            }
+            if (j % 5 === 0) {
+                cellStyle.borderLeft ="1px solid black"
+            }
+            else if ((j + 1) % 5 === 0) {
+                cellStyle.borderRight ="1px solid black"
+            }
         }
         return (
             boardData[i][j].isBlue ? 
