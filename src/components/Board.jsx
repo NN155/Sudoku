@@ -3,11 +3,12 @@ import Solver from "./Solver"
 import Restart from "./Restart"
 import GameMode from "./GameMode"
 import {values, reversValue, keysWithLetters, keysDefault} from "../data"
+
 export default function Board() {
 
     
-    const [gameMode, setGameMode] = React.useState("Default")
-    const boardSize = gameMode === "Default" ? 9 : 12
+    const [gameMode, setGameMode] = React.useState("With Letters")
+    const boardSize = gameMode === "Default" ? 9 : 16
     const [boardData, setBoardData] = React.useState(initializeBoard(boardSize))
     const boardStyle = {
         gridTemplateColumns: `repeat(${boardSize}, 30px)`
@@ -67,16 +68,17 @@ export default function Board() {
     
     function createCell(i, j) {
         let cellStyle = {}
-        if (i % (boardSize / 3) === 0) {
+        const value  = gameMode === "Default" ? 3 : 4
+        if (i % value === 0) {
             cellStyle.borderTop ="1px solid black"
         }
-        else if ((i + 1) % (boardSize / 3) === 0 ) {
+        else if ((i + 1) % value === 0 ) {
             cellStyle.borderBottom ="1px solid black"
         }
-        if (j % (boardSize / 3) === 0) {
+        if (j % value === 0) {
             cellStyle.borderLeft ="1px solid black"
         }
-        else if ((j + 1) % (boardSize / 3) === 0) {
+        else if ((j + 1) % value === 0) {
             cellStyle.borderRight ="1px solid black"
         }
 
@@ -117,7 +119,7 @@ export default function Board() {
             </div>
         </div>
         <div className="center">
-            <Solver boardData={boardData} setBoardData={setBoardData} gameMode={gameMode}/>
+            <Solver boardData={boardData} setBoardData={setBoardData} gameMode={gameMode} boardSize={boardSize}/>
         </div>
         <div className="center">
             <Restart setBoardData={setBoardData} initializeBoard={initializeBoard} size={boardSize} />

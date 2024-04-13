@@ -1,8 +1,9 @@
 import React from "react"
+import {stringValues} from "../data" 
 
 export default function Solver(props) {
     let newBoard;
-
+    const boardSizeInBox = props.gameMode === "Default" ? 3 : 4
     function newCell(oldCell, valueToRemove) {
         let newValue = oldCell.value.filter(element => element !== valueToRemove)
         const cell = {
@@ -13,7 +14,7 @@ export default function Solver(props) {
     }
 
     function removeRow(i, j) {
-        for (let x = 0; x < 9; x++) {
+        for (let x = 0; x < props.boardSize; x++) {
             if (!newBoard[i][x].isRevealed) {
                 newBoard[i][x] = newCell(newBoard[i][x], newBoard[i][j].currentValue)
             }
@@ -21,7 +22,7 @@ export default function Solver(props) {
     }
 
     function removeColumn(i, j) {
-        for (let y = 0; y < 9; y++) {
+        for (let y = 0; y < props.boardSize; y++) {
             if (!newBoard[y][j].isRevealed) {
                 newBoard[y][j] = newCell(newBoard[y][j], newBoard[i][j].currentValue)
             }
@@ -29,10 +30,10 @@ export default function Solver(props) {
     }
 
     function removeBox(i, j) {
-        let iBox = (Math.floor(i / 3)) * 3
-        let jBox = (Math.floor(j / 3)) * 3
-        for (let y =  iBox; y < iBox + 3; y++) {
-            for (let x = jBox; x < jBox + 3; x++) {
+        let iBox = (Math.floor(i / boardSizeInBox)) * boardSizeInBox
+        let jBox = (Math.floor(j / boardSizeInBox)) * boardSizeInBox
+        for (let y =  iBox; y < iBox + boardSizeInBox; y++) {
+            for (let x = jBox; x < jBox + boardSizeInBox; x++) {
                 if (!newBoard[y][x].isRevealed) {
                     newBoard[y][x] = newCell(newBoard[y][x], newBoard[i][j].currentValue)
                 }
@@ -41,14 +42,14 @@ export default function Solver(props) {
     }
 
     function removeValues(i, j) {
-        removeRow(i, j)
+        removeRow(i, j) 
         removeColumn(i, j)
         removeBox(i, j)
     } 
 
     function checkAllCells() {
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
+        for (let i = 0; i < props.boardSize; i++) {
+            for (let j = 0; j < props.boardSize; j++) {
                 if (newBoard[i][j].isRevealed && !newBoard[i][j].checked) {
                     removeValues(i, j)
                     newBoard[i][j] = { 
@@ -60,7 +61,10 @@ export default function Solver(props) {
         }
     }
     function difference(cells) {
-        let result = {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": []}
+        let result = props.gameMode === "Default" ? 
+        {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": []}
+        :
+        {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": [], "A": [], "B": [], "C": [], "D": [], "E": [], "F": []}
         // [i,j , cell]
         for (let cell of cells) {
             for (let i of cell[2].value) {
@@ -75,16 +79,16 @@ export default function Solver(props) {
                 const [i, j] = result[key][0]
                 const cell = {
                     ...newBoard[i][j],
-                    value: [Number(key)]
+                    value: [stringValues[key]]
                 }
                 newBoard[i][j] = cell
             }
         }
     }
     function checkRows() {
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < props.boardSize; i++) {
             let row = []
-            for (let j = 0; j < 9; j++) {
+            for (let j = 0; j < props.boardSize; j++) {
                 if (!newBoard[i][j].isRevealed) {
                     row.push([i, j, newBoard[i][j]])
                 }
@@ -96,9 +100,9 @@ export default function Solver(props) {
     }
 
     function checkColumn() {
-        for (let j = 0; j < 9; j++) {
+        for (let j = 0; j < props.boardSize; j++) {
             let column = []
-            for (let i = 0; i < 9; i++) {
+            for (let i = 0; i < props.boardSize; i++) {
                 if (!newBoard[i][j].isRevealed) {
                     column.push([i, j, newBoard[i][j]])
                 }
@@ -110,11 +114,11 @@ export default function Solver(props) {
     }
 
     function checkBox() {
-        for (let y = 0; y < 3; y++) {
-            for (let x = 0; x < 3; x++) {
+        for (let y = 0; y < boardSizeInBox; y++) {
+            for (let x = 0; x < boardSizeInBox; x++) {
                 let box = []
-                for (let i = y * 3; i < (y * 3) + 3; i++) {
-                    for (let j = x * 3; j < (x * 3) + 3; j++) {
+                for (let i = y * boardSizeInBox; i < (y * boardSizeInBox) + boardSizeInBox; i++) {
+                    for (let j = x * boardSizeInBox; j < (x * boardSizeInBox) + boardSizeInBox; j++) {
                         if (!newBoard[i][j].isRevealed) {
                             box.push([i, j, newBoard[i][j]])
                         }
@@ -134,8 +138,8 @@ export default function Solver(props) {
         checkBox()
     }
     function displayCells() {
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
+        for (let i = 0; i < props.boardSize; i++) {
+            for (let j = 0; j < props.boardSize; j++) {
                 if (newBoard[i][j].value.length === 1) {
                     newBoard[i][j] = { 
                         ...newBoard[i][j],
