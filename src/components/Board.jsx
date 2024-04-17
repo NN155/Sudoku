@@ -7,7 +7,7 @@ import {values, reversValue, keysWithLetters, keysDefault} from "../data"
 export default function Board() {
 
     
-    const [gameMode, setGameMode] = React.useState("With Letters")
+    const [gameMode, setGameMode] = React.useState("Default")
     const boardSize = gameMode === "Default" ? 9 : 16
     const [boardData, setBoardData] = React.useState(initializeBoard(boardSize))
     const boardStyle = {
